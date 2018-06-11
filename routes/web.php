@@ -16,3 +16,7 @@ $router->group(['prefix' => 'oauth2'], function () use ($router) {
     $router->get('callback', 'OAuth2Controller@loginCallback');
     $router->post('token', 'OAuth2Controller@getToken');
 });
+
+$router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($router) {
+    $router->get('me', 'UserController@get');
+});
