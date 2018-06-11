@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Services\TokenService;
 use App\Services\GoogleClientService;
 use App\Services\GoogleUserService;
+use App\Services\GoogleVideoService;
 
 class GoogleServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,7 @@ class GoogleServiceProvider extends ServiceProvider
                 'GOOGLE_CLIENT_SECRET' => env('GOOGLE_CLIENT_SECRET'),
                 'GOOGLE_OAUTH2_CALLBACK' => env('GOOGLE_OAUTH2_CALLBACK')
             ]);
-            $this->app->bind('App\Services\GoogleUserService', GoogleUserService::class);
+        $this->app->bind('App\Services\GoogleUserService', GoogleUserService::class);
+        $this->app->bind('App\Services\GoogleVideoService', GoogleVideoService::class);
     }
 }

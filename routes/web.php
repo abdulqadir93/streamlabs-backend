@@ -19,4 +19,8 @@ $router->group(['prefix' => 'oauth2'], function () use ($router) {
 
 $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($router) {
     $router->get('me', 'UserController@get');
+    $router->group(['prefix' => 'videos'], function () use ($router) {
+        $router->get('', 'VideoController@list');
+        $router->get('{id}', 'VideoController@get');
+    });
 });
