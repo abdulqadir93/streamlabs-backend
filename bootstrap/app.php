@@ -23,9 +23,9 @@ $app = new Laravel\Lumen\Application(
     realpath(__DIR__.'/../')
 );
 
-// $app->withFacades();
+$app->configure('cors');
 
-// $app->withEloquent();
+// $app->withFacades();
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +59,10 @@ $app->singleton(
 |
 */
 
+$app->middleware([
+    \Barryvdh\Cors\HandleCors::class
+]);
+
 // $app->middleware([
 //    App\Http\Middleware\ExampleMiddleware::class
 // ]);
@@ -78,9 +82,13 @@ $app->singleton(
 |
 */
 
+$app->register(Barryvdh\Cors\ServiceProvider::class);
+$app->register(Jenssegers\Mongodb\MongodbServiceProvider::class);
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+
+$app->withEloquent();
 
 /*
 |--------------------------------------------------------------------------
