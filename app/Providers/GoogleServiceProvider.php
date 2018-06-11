@@ -7,6 +7,7 @@ use App\Services\TokenService;
 use App\Services\GoogleClientService;
 use App\Services\GoogleUserService;
 use App\Services\GoogleVideoService;
+use App\Services\GoogleLiveChatService;
 
 class GoogleServiceProvider extends ServiceProvider
 {
@@ -28,5 +29,6 @@ class GoogleServiceProvider extends ServiceProvider
             ]);
         $this->app->bind('App\Services\GoogleUserService', GoogleUserService::class);
         $this->app->bind('App\Services\GoogleVideoService', GoogleVideoService::class);
+        $this->app->bind('App\Services\GoogleLiveChatService', GoogleLiveChatService::class);
     }
 }

@@ -23,4 +23,8 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
         $router->get('', 'VideoController@list');
         $router->get('{id}', 'VideoController@get');
     });
+    $router->group(['prefix' => 'chat/{id}'], function () use ($router) {
+        $router->get('', 'ChatController@get');
+        $router->get('author/{authorId}', 'ChatController@getByAuthor');
+    });
 });
