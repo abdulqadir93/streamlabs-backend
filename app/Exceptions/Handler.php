@@ -8,6 +8,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Http\JsonResponse;
 
 class Handler extends ExceptionHandler
 {
@@ -45,6 +46,29 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        return parent::render($request, $e);
+        $parentRender = parent::render($request, $e);
+
+        // if parent returns a JsonResponse 
+        // for example in case of a ValidationException 
+        if ($parentRender instanceof JsonResponse)
+        {
+            return $parentRender;
+        }
+
+        $status = $parentRender->status();
+        $response = [ 'errors' => [ array('message' => $e->getMessage()) ] ];
+
+        if (is_a($e, 'Google_Service_Exception')) {
+            if ($e->getCode() > 400) {
+                $status = $e->getCode();
+            }
+            $response = [ 'errors' => $e->getErrors() ];
+        }
+
+        if (is_a($e, 'UnexpectedValueException')) {
+            $status = 401;
+        }
+
+        return new JsonResponse($response, $status);    
     }
 }
