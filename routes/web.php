@@ -11,6 +11,8 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+$router->group(['prefix' => 'oauth2'], function () use ($router) {
+    $router->get('login', 'OAuth2Controller@login');
+    $router->get('callback', 'OAuth2Controller@loginCallback');
+    $router->post('token', 'OAuth2Controller@getToken');
 });
