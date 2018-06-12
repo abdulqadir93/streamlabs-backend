@@ -41,7 +41,7 @@ class GoogleClientService {
         $client->setClientId($this->config['GOOGLE_CLIENT_ID']);
         $client->setClientSecret($this->config['GOOGLE_CLIENT_SECRET']);
         $client->setRedirectUri($this->config['GOOGLE_OAUTH2_CALLBACK']);
-        $client->addScope('https://www.googleapis.com/auth/youtube.readonly');
+        $client->addScope('https://www.googleapis.com/auth/youtube');
         $client->addScope('https://www.googleapis.com/auth/userinfo.profile');
         if ($token != null) {
             $client->setAccessToken($this->tokenService->decode($token));

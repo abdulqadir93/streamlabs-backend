@@ -9,6 +9,7 @@ use Google_Service_YouTube_LiveChatMessageListResponse;
 use Google_Service_YouTube_LiveChatMessage;
 use Google_Service_YouTube_LiveChatMessageSnippet;
 use Google_Service_YouTube_LiveChatMessageAuthorDetails;
+use Google_Service_YouTube_LiveChatTextMessageDetails;
 use Carbon\Carbon;
 
 class GoogleLiveChatService extends GoogleBaseService {
@@ -77,6 +78,30 @@ class GoogleLiveChatService extends GoogleBaseService {
         return $model->orderBy('publishedAt', 'desc')->take(500)->get()->toArray();
     }
 
+    public function insertMessage(string $token, string $chatId, string $text) {
+        $service = $this->clientService->getYoutubeService($token);
+        $result = $service->liveChatMessages->insert(
+            'snippet',
+            $this->preparePayloadForInsert($chatId, $text)
+        );
+        return $this->convertMessage($result);
+    }
+
+    private function preparePayloadForInsert(string $chatId, string $text): Google_Service_YouTube_LiveChatMessage {
+        $textMessageDetails = new Google_Service_YouTube_LiveChatTextMessageDetails();
+        $textMessageDetails->setMessageText($text);
+        
+        $snippet = new Google_Service_YouTube_LiveChatMessageSnippet();
+        $snippet->setLiveChatId($chatId);
+        $snippet->setType('textMessageEvent');
+        $snippet->setTextMessageDetails($textMessageDetails);
+
+        $message = new Google_Service_YouTube_LiveChatMessage();
+        $message->setSnippet($snippet);
+
+        return $message;
+    }
+
     private function getMessagesFromResult(Google_Service_YouTube_LiveChatMessageListResponse $result) {
         $messages = [];
         foreach($result->getItems() as $message) {
@@ -86,11 +111,12 @@ class GoogleLiveChatService extends GoogleBaseService {
     }
 
     private function convertMessage(Google_Service_YouTube_LiveChatMessage $message) {
+        $messageArr = [ 'id' => $message->getId() ];
+        if ($message->getAuthorDetails() !== null) {
+            $messageArr['author'] = $this->convertAuthor($message->getAuthorDetails());
+        }
         return array_merge(
-            [
-                'id' => $message->getId(),
-                'author' => $this->convertAuthor($message->getAuthorDetails())
-            ],
+            $messageArr,
             $this->convertSnippet($message->getSnippet())
         );
     }

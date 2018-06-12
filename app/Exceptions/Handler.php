@@ -59,7 +59,7 @@ class Handler extends ExceptionHandler
         $response = [ 'errors' => [ array('message' => $e->getMessage()) ] ];
 
         if (is_a($e, 'Google_Service_Exception')) {
-            if ($e->getCode() > 400) {
+            if ($e->getCode() >= 400) {
                 $status = $e->getCode();
             }
             $response = [ 'errors' => $e->getErrors() ];

@@ -25,6 +25,7 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
     });
     $router->group(['prefix' => 'chat/{id}'], function () use ($router) {
         $router->get('', 'ChatController@get');
+        $router->post('', 'ChatController@insert');
         $router->get('author/{authorId}', 'ChatController@getByAuthor');
     });
 });

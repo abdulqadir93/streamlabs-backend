@@ -45,4 +45,12 @@ class ChatController extends Controller
         ]);
         return array_reverse($messages);
     }
+
+    public function insert(Request $request, string $chatId) {
+        return $this->service->insertMessage(
+            $this->getToken($request),
+            $chatId,
+            $request->input('text')
+        );
+    }
 }
